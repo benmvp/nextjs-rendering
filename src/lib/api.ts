@@ -1,28 +1,45 @@
-import { Post } from "@/interfaces/post";
-import fs from "fs";
-import matter from "gray-matter";
-import { join } from "path";
+import { Post } from '@/interfaces/post'
+import { readdir, readFile } from 'fs-extra'
+import matter from 'gray-matter'
+import { join } from 'path'
 
-const postsDirectory = join(process.cwd(), "_posts");
+const postsDirectory = join(process.cwd(), '_posts')
 
-export function getPostSlugs() {
-  return fs.readdirSync(postsDirectory);
+export async function getPostSlugs() {
+  const fileNames = await readdir(postsDirectory)
+
+  return fileNames.map((fileName) => fileName.replace(/\.md$/, ''))
 }
 
-export function getPostBySlug(slug: string) {
-  const realSlug = slug.replace(/\.md$/, "");
-  const fullPath = join(postsDirectory, `${realSlug}.md`);
-  const fileContents = fs.readFileSync(fullPath, "utf8");
-  const { data, content } = matter(fileContents);
+export async function getPostBySlug(slug: string | undefined) {
+  if (!slug) {
+    return null
+  }
 
-  return { ...data, slug: realSlug, content } as Post;
+  const fullPath = join(postsDirectory, `${slug}.md`)
+  const fileContents = await readFile(fullPath, 'utf8')
+  const { data, content } = matter(fileContents)
+
+  return { ...data, slug, content } as Post
 }
 
-export function getAllPosts(): Post[] {
-  const slugs = getPostSlugs();
-  const posts = slugs
-    .map((slug) => getPostBySlug(slug))
+export async function getAllPosts(): Promise<Post[]> {
+  const slugs = await getPostSlugs()
+  const posts = (await Promise.all(slugs.map((slug) => getPostBySlug(slug))))
+    // filter out `null` values
+    .filter((post): post is Post => Boolean(post))
     // sort posts by date in descending order
-    .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
-  return posts;
+    .sort((post1, post2) => (post1.date > post2.date ? -1 : 1))
+
+  return posts
+}
+
+export async function getRecommendedPosts(slug: string | undefined) {
+  const allPosts = await getAllPosts()
+
+  // filter out the current post, randomly sort, and take the first 2
+  return allPosts
+    .filter((post) => post.slug !== slug)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 2)
 }
