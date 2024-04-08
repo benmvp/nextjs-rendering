@@ -1,11 +1,12 @@
-import { Post } from "@/interfaces/post";
-import { PostPreview } from "./post-preview";
+import { Post } from '@/interfaces/post'
+import { PostPreview, type RenderMode } from './post-preview'
 
 type Props = {
-  posts: Post[];
-};
+  posts: Post[]
+  renderMode?: RenderMode
+}
 
-export function MoreStories({ posts }: Props) {
+export function MoreStories({ posts, renderMode }: Props) {
   return (
     <section>
       <h2 className="mb-8 text-5xl md:text-7xl font-bold tracking-tighter leading-tight">
@@ -21,9 +22,10 @@ export function MoreStories({ posts }: Props) {
             author={post.author}
             slug={post.slug}
             excerpt={post.excerpt}
+            renderMode={renderMode}
           />
         ))}
       </div>
     </section>
-  );
+  )
 }

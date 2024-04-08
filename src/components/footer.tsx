@@ -1,5 +1,5 @@
-import Container from "@/app/_components/container";
-import { EXAMPLE_PATH } from "@/lib/constants";
+import Container from '@/components/container'
+import { EXAMPLE_PATH } from '@/lib/constants'
 
 export function Footer() {
   return (
@@ -17,7 +17,7 @@ export function Footer() {
               Read Documentation
             </a>
             <a
-              href={`https://github.com/vercel/next.js/tree/canary/examples/${EXAMPLE_PATH}`}
+              href="https://github.com/benmvp/next-rendering"
               className="mx-3 font-bold hover:underline"
             >
               View on GitHub
@@ -26,7 +26,7 @@ export function Footer() {
         </div>
       </Container>
     </footer>
-  );
+  )
 }
 
-export default Footer;
+export default Footer
