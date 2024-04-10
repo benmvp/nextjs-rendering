@@ -14,8 +14,8 @@ interface Props {
   remainingPosts: Post[]
 }
 
-export const getStaticProps: GetStaticProps<Props> = () => {
-  const allPosts = getAllPosts()
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const allPosts = await getAllPosts()
   const heroPost = allPosts[0]
   const remainingPosts = allPosts.slice(1)
 
@@ -61,8 +61,11 @@ const Index: NextPage<Props> = ({ heroPost, remainingPosts }) => {
             author={heroPost.author}
             slug={heroPost.slug}
             excerpt={heroPost.excerpt}
+            renderMode="ssg"
           />
-          {remainingPosts.length > 0 && <MoreStories posts={remainingPosts} />}
+          {remainingPosts.length > 0 && (
+            <MoreStories posts={remainingPosts} renderMode="ssg" />
+          )}
         </Container>
       </main>
     </>

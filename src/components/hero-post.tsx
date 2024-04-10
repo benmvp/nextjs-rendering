@@ -1,17 +1,19 @@
-import Avatar from "@/components/avatar";
-import CoverImage from "@/components/cover-image";
-import { type Author } from "@/interfaces/author";
-import Link from "next/link";
-import DateFormatter from "./date-formatter";
+import Avatar from '@/components/avatar'
+import CoverImage from '@/components/cover-image'
+import { type Author } from '@/interfaces/author'
+import Link from 'next/link'
+import DateFormatter from './date-formatter'
+import { RenderMode } from './post-preview'
 
 type Props = {
-  title: string;
-  coverImage: string;
-  date: string;
-  excerpt: string;
-  author: Author;
-  slug: string;
-};
+  title: string
+  coverImage: string
+  date: string
+  excerpt: string
+  author: Author
+  slug: string
+  renderMode?: RenderMode
+}
 
 export function HeroPost({
   title,
@@ -20,6 +22,7 @@ export function HeroPost({
   excerpt,
   author,
   slug,
+  renderMode = 'app',
 }: Props) {
   return (
     <section>
@@ -30,8 +33,7 @@ export function HeroPost({
         <div>
           <h3 className="mb-4 text-4xl lg:text-5xl leading-tight">
             <Link
-              as={`/posts/${slug}`}
-              href="/posts/[slug]"
+              href={`/posts-${renderMode}/${slug}`}
               className="hover:underline"
             >
               {title}
@@ -47,5 +49,5 @@ export function HeroPost({
         </div>
       </div>
     </section>
-  );
+  )
 }

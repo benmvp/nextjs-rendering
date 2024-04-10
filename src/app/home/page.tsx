@@ -4,8 +4,8 @@ import { Intro } from '@/components/intro'
 import { MoreStories } from '@/components/more-stories'
 import { getAllPosts } from '@/lib/api'
 
-export default function Index() {
-  const allPosts = getAllPosts()
+export default async function Index() {
+  const allPosts = await getAllPosts()
 
   const heroPost = allPosts[0]
 
@@ -22,6 +22,7 @@ export default function Index() {
           author={heroPost.author}
           slug={heroPost.slug}
           excerpt={heroPost.excerpt}
+          renderMode="app"
         />
         {morePosts.length > 0 && (
           <MoreStories posts={morePosts} renderMode="app" />
