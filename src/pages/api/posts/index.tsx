@@ -18,7 +18,5 @@ export default async function handler(
 
   const posts = await getAllPosts()
 
-  await wait(Math.random() * 5000 + 1000)
-
   res.status(200).json({ posts })
 }

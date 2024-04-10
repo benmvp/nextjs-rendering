@@ -5,13 +5,13 @@ import markdownToHtml from '@/lib/markdownToHtml'
 import Alert from '@/components/alert'
 import Container from '@/components/container'
 import Header from '@/components/header'
-import { MoreStories } from '@/components/more-stories'
 import { PostBody } from '@/components/post-body'
 import { PostHeader } from '@/components/post-header'
 import type { Post } from '@/interfaces/post'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import PageLayout from '@/components/page-layout'
+import { RecommendedPosts } from '@/components/recommended-posts-client'
 
 interface DisplayPost extends Post {
   htmlContent: string
@@ -20,12 +20,15 @@ interface DisplayPost extends Post {
 interface Props {}
 
 const PostPage: NextPage<Props> = () => {
+  const date = new Date().toISOString()
   const router = useRouter()
   const slug = router.query.slug as string | undefined
   const [post, setPost] = useState<DisplayPost | undefined>(undefined)
-  const [recommendedPosts, setRecommendedPosts] = useState<Post[]>([])
 
   useEffect(() => {
+    // We have access to cookies, headers, and other user-specific data here
+    // because this function runs at request time on the client
+
     const fetchPost = async () => {
       const res = await fetch(`/api/posts/${slug}`)
       const { post } = (await res.json()) as { post: Post }
@@ -33,21 +36,14 @@ const PostPage: NextPage<Props> = () => {
 
       setPost({ ...post, htmlContent })
     }
-    const fetchRecommendedPosts = async () => {
-      const res = await fetch(`/api/posts/${slug}/recommended`)
-      const { posts } = (await res.json()) as { posts: Post[] }
-
-      setRecommendedPosts(posts)
-    }
 
     if (slug) {
       fetchPost()
-      fetchRecommendedPosts()
     }
   }, [slug])
 
   return post ? (
-    <PageLayout>
+    <PageLayout date={date}>
       <Meta post={post} />
 
       <main>
@@ -62,9 +58,7 @@ const PostPage: NextPage<Props> = () => {
               author={post.author}
             />
             <PostBody content={post.htmlContent} />
-            {recommendedPosts.length > 0 && (
-              <MoreStories posts={recommendedPosts} renderMode="csr" />
-            )}
+            <RecommendedPosts slug={post.slug} renderMode="csr" />
           </article>
         </Container>
       </main>

@@ -26,7 +26,5 @@ export default async function handler(
 
   console.log('Retrieved post (API)', post.slug)
 
-  await wait(Math.random() * 5000)
-
   res.status(200).json({ post })
 }

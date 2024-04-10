@@ -1,7 +1,13 @@
+import { format, parseISO } from 'date-fns'
 import Container from '@/components/container'
-import { EXAMPLE_PATH } from '@/lib/constants'
 
-export function Footer() {
+interface Props {
+  date: string
+}
+
+export function Footer({ date }: Props) {
+  const parsedDate = parseISO(date)
+
   return (
     <footer className="bg-neutral-50 border-t border-neutral-200">
       <Container>
@@ -24,6 +30,9 @@ export function Footer() {
             </a>
           </div>
         </div>
+        <p className="text-sm text-center">
+          Now: <time dateTime={date}>{format(parsedDate, 'PPPPpppp')}</time>
+        </p>
       </Container>
     </footer>
   )

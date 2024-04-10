@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getRecommendedPosts } from '@/lib/api'
 import { Post } from '@/interfaces/post'
-import { wait } from '@/lib/wait'
 
 interface ResponseData {
   posts: Post[]
@@ -20,11 +19,9 @@ export default async function handler(
   const recommendedPosts = await getRecommendedPosts(slug)
 
   console.log(
-    'Retrieved recommended posts (API)',
+    'Retrieved recommended posts (pages API)',
     recommendedPosts.map((p) => p.slug),
   )
-
-  await wait(Math.random() * 5000)
 
   res.status(200).json({ posts: recommendedPosts })
 }

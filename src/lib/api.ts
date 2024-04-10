@@ -2,6 +2,7 @@ import { Post } from '@/interfaces/post'
 import { readdir, readFile } from 'fs-extra'
 import matter from 'gray-matter'
 import { join } from 'path'
+import { wait } from './wait'
 
 const postsDirectory = join(process.cwd(), '_posts')
 
@@ -12,6 +13,9 @@ export async function getPostSlugs() {
 }
 
 export async function getPostBySlug(slug: string | undefined) {
+  // Simulate a slow API
+  await wait(Math.random() * 5000)
+
   if (!slug) {
     return null
   }

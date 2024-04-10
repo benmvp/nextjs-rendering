@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getAllPosts, getPostBySlug, getPostSlugs } from '@/lib/api'
+import { getPostBySlug, getPostSlugs } from '@/lib/api'
 import { CMS_NAME } from '@/lib/constants'
 import markdownToHtml from '@/lib/markdownToHtml'
 import Alert from '@/components/alert'
@@ -8,7 +8,7 @@ import Container from '@/components/container'
 import Header from '@/components/header'
 import { PostBody } from '@/components/post-body'
 import { PostHeader } from '@/components/post-header'
-import { MoreStories } from '@/components/more-stories'
+import { RecommendedPosts } from '@/components/recommended-posts-server'
 
 interface Params {
   params: {
@@ -16,7 +16,8 @@ interface Params {
   }
 }
 
-// Return a list of `params` to populate the [slug] dynamic segment
+// Return a list of `params` to statically generate blog post routes at build
+// time instead of on-demand at request time.
 export async function generateStaticParams() {
   const posts = await getPostSlugs()
 
@@ -28,13 +29,13 @@ export async function generateStaticParams() {
 export default async function Post({ params }: Params) {
   const post = await getPostBySlug(params.slug)
 
+  // By default, this will return a static page for everyone. But if we access
+  // cookies, headers, etc. the route will be dynamically rendered to because it
+  // now relies on request-time data.
+
   if (!post) {
     return notFound()
   }
-
-  const remainingPosts = (await getAllPosts()).filter(
-    (p) => p.slug !== post.slug,
-  )
 
   const content = await markdownToHtml(post.content || '')
 
@@ -51,14 +52,17 @@ export default async function Post({ params }: Params) {
             author={post.author}
           />
           <PostBody content={content} />
-          {remainingPosts.length > 0 && <MoreStories posts={remainingPosts} />}
+          <RecommendedPosts slug={post.slug} />
         </article>
       </Container>
     </main>
   )
 }
 
-export async function generateMetadata({ params }: Params): Metadata {
+// revalidate (i.e. refresh) the post every 15 seconds
+export const revalidate = 15
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const post = await getPostBySlug(params.slug)
 
   if (!post) {

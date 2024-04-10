@@ -5,19 +5,19 @@ import markdownToHtml from '@/lib/markdownToHtml'
 import Alert from '@/components/alert'
 import Container from '@/components/container'
 import Header from '@/components/header'
-import { MoreStories } from '@/components/more-stories'
 import { PostBody } from '@/components/post-body'
 import { PostHeader } from '@/components/post-header'
 import type { Post } from '@/interfaces/post'
 import PageLayout from '@/components/page-layout'
 import { getPostBySlug, getPostSlugs } from '@/lib/api'
-import { useEffect, useState } from 'react'
+import { RecommendedPosts } from '@/components/recommended-posts-client'
 
 interface DisplayPost extends Post {
   htmlContent: string
 }
 
 interface Props {
+  date: string
   post: DisplayPost
 }
 
@@ -42,6 +42,9 @@ export const getStaticProps: GetStaticProps<
 > = async ({ params }) => {
   const post = await getPostBySlug(params?.slug)
 
+  // We don't have access to cookies, headers, and other user-specific data here
+  // because this function runs at build time
+
   if (!post) {
     return { notFound: true }
   }
@@ -52,34 +55,23 @@ export const getStaticProps: GetStaticProps<
 
   return {
     props: {
+      date: new Date().toISOString(),
       post: {
         ...post,
         htmlContent: content,
       },
     },
-    revalidate: 30,
+
+    // revalidate (i.e. refresh) the post every 15 seconds
+    revalidate: 15,
   }
 }
 
-const PostPage: NextPage<Props> = ({ post }) => {
+const PostPage: NextPage<Props> = ({ date, post }) => {
   const slug = post.slug
-  const [recommendedPosts, setRecommendedPosts] = useState<Post[]>([])
-
-  useEffect(() => {
-    const fetchRecommendedPosts = async () => {
-      const res = await fetch(`/api/posts/${slug}/recommended`)
-      const { posts } = (await res.json()) as { posts: Post[] }
-
-      setRecommendedPosts(posts)
-    }
-
-    if (slug) {
-      fetchRecommendedPosts()
-    }
-  }, [slug])
 
   return (
-    <PageLayout>
+    <PageLayout date={date}>
       <Meta post={post} />
 
       <main>
@@ -94,9 +86,7 @@ const PostPage: NextPage<Props> = ({ post }) => {
               author={post.author}
             />
             <PostBody content={post.htmlContent} />
-            {recommendedPosts.length > 0 && (
-              <MoreStories posts={recommendedPosts} renderMode="ssg" />
-            )}
+            <RecommendedPosts slug={slug} renderMode="isr" />
           </article>
         </Container>
       </main>
