@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import PageLayout from '@/components/page-layout'
 import { RecommendedPosts } from '@/components/recommended-posts-client'
+import OtherRenderModes from '@/components/other-render-modes'
 
 interface DisplayPost extends Post {
   htmlContent: string
@@ -59,6 +60,7 @@ const PostPage: NextPage<Props> = () => {
             />
             <PostBody content={post.htmlContent} />
             <RecommendedPosts slug={post.slug} renderMode="csr" />
+            <OtherRenderModes slug={slug} renderMode="csr" />
           </article>
         </Container>
       </main>

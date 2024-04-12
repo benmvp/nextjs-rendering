@@ -9,6 +9,7 @@ import Header from '@/components/header'
 import { PostBody } from '@/components/post-body'
 import { PostHeader } from '@/components/post-header'
 import { RecommendedPosts } from '@/components/recommended-posts-server'
+import OtherRenderModes from '@/components/other-render-modes'
 
 interface Params {
   params: {
@@ -53,6 +54,7 @@ export default async function Post({ params }: Params) {
           />
           <PostBody content={content} />
           <RecommendedPosts slug={post.slug} />
+          <OtherRenderModes slug={post.slug} renderMode="app" />
         </article>
       </Container>
     </main>

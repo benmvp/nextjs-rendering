@@ -3,7 +3,7 @@ import CoverImage from '@/components/cover-image'
 import { type Author } from '@/interfaces/author'
 import Link from 'next/link'
 import DateFormatter from './date-formatter'
-import { RenderMode } from './post-preview'
+import { RenderMode } from '@/interfaces/render'
 
 type Props = {
   title: string

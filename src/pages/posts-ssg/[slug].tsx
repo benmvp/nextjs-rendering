@@ -11,6 +11,7 @@ import type { Post } from '@/interfaces/post'
 import PageLayout from '@/components/page-layout'
 import { getPostBySlug, getPostSlugs } from '@/lib/api'
 import { RecommendedPosts } from '@/components/recommended-posts-client'
+import OtherRenderModes from '@/components/other-render-modes'
 
 interface DisplayPost extends Post {
   htmlContent: string
@@ -86,6 +87,7 @@ const PostPage: NextPage<Props> = ({ date, post }) => {
             />
             <PostBody content={post.htmlContent} />
             <RecommendedPosts slug={slug} renderMode="ssg" />
+            <OtherRenderModes slug={slug} renderMode="ssg" />
           </article>
         </Container>
       </main>

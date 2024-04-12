@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { MoreStories } from './more-stories'
-import { type RenderMode } from './post-preview'
+import { RenderMode } from '@/interfaces/render'
 import { Post } from '@/interfaces/post'
 
 interface Props {

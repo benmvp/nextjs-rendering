@@ -3,8 +3,7 @@ import Link from 'next/link'
 import Avatar from './avatar'
 import CoverImage from './cover-image'
 import DateFormatter from './date-formatter'
-
-export type RenderMode = 'app' | 'csr' | 'isr' | 'ssg' | 'ssr'
+import { RenderMode } from '@/interfaces/render'
 
 type Props = {
   title: string

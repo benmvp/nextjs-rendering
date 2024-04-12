@@ -1,5 +1,6 @@
 import { Post } from '@/interfaces/post'
-import { PostPreview, type RenderMode } from './post-preview'
+import { PostPreview } from './post-preview'
+import { RenderMode } from '@/interfaces/render'
 
 type Props = {
   posts: Post[]
