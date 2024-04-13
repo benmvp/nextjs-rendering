@@ -60,7 +60,7 @@ const PostPage: NextPage<Props> = () => {
             />
             <PostBody content={post.htmlContent} />
             <RecommendedPosts slug={post.slug} renderMode="csr" />
-            <OtherRenderModes slug={slug} renderMode="csr" />
+            <OtherRenderModes slug={post.slug} renderMode="csr" />
           </article>
         </Container>
       </main>
