@@ -25,7 +25,7 @@ export async function RecommendedPostsLoadable({ slug }: Props) {
   return <MoreStories posts={recommendedPosts} renderMode="app" />
 }
 
-export async function RecommendedPosts({ slug }: Props) {
+export function RecommendedPosts({ slug }: Props) {
   return (
     <Suspense fallback={<Loading />}>
       <RecommendedPostsLoadable slug={slug} />

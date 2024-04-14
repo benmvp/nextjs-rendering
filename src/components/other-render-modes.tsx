@@ -21,16 +21,19 @@ export default function OtherRenderModes({ renderMode, slug }: Props) {
   )
 
   return (
-    <div className="flex justify-between text-xl mt-10">
-      {displayRenderModes.map((displayRenderMode) => (
-        <Link
-          key={displayRenderMode}
-          href={`/posts-${displayRenderMode}/${slug}`}
-          className="hover:underline"
-        >
-          {LABELS[displayRenderMode]}
-        </Link>
-      ))}
+    <div>
+      <h3 className="text-2xl mt-10">View this post with:</h3>
+      <div className="flex justify-between text-xl mt-10">
+        {displayRenderModes.map((displayRenderMode) => (
+          <Link
+            key={displayRenderMode}
+            href={`/posts-${displayRenderMode}/${slug}`}
+            className="hover:underline"
+          >
+            {LABELS[displayRenderMode]}
+          </Link>
+        ))}
+      </div>
     </div>
   )
 }
