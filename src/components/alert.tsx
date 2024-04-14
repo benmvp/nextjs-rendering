@@ -32,6 +32,7 @@ const Alert = ({ preview }: Props) => {
               <a
                 href="https://github.com/benmvp/next-rendering"
                 className="underline hover:text-blue-600 duration-200 transition-colors"
+                target="_blank"
               >
                 available on GitHub
               </a>
