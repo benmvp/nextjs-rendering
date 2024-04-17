@@ -19,7 +19,7 @@ export default async function handler(
   const recommendedPosts = await getRecommendedPosts(slug)
 
   console.log(
-    'Retrieved recommended posts (pages API)',
+    `Retrieved recommended posts for "${slug}" (pages API)`,
     recommendedPosts.map((p) => p.slug),
   )
 

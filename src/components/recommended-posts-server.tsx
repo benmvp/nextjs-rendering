@@ -10,11 +10,11 @@ function Loading() {
   return <p className="text-xl mt-32 text-center">Loading recommendations...</p>
 }
 
-export async function RecommendedPostsLoadable({ slug }: Props) {
+async function RecommendedPostsLoadable({ slug }: Props) {
   const recommendedPosts = await getRecommendedPosts(slug)
 
   console.log(
-    'Retrieved recommended posts (app server component)',
+    `Retrieved recommended posts for "${slug}" (app server component)`,
     recommendedPosts.map((p) => p.slug),
   )
 
@@ -25,7 +25,7 @@ export async function RecommendedPostsLoadable({ slug }: Props) {
   return <MoreStories posts={recommendedPosts} renderMode="app" />
 }
 
-export function RecommendedPosts({ slug }: Props) {
+export async function RecommendedPosts({ slug }: Props) {
   return (
     <Suspense fallback={<Loading />}>
       <RecommendedPostsLoadable slug={slug} />
