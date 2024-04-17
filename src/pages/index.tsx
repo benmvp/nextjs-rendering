@@ -8,8 +8,10 @@ import type { Post } from '@/interfaces/post'
 import { getAllPosts } from '@/lib/api'
 import Container from '@/components/container'
 import Alert from '@/components/alert'
+import PageLayout from '@/components/page-layout'
 
 interface Props {
+  date: string
   heroPost: Post
   remainingPosts: Post[]
 }
@@ -21,6 +23,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
   return {
     props: {
+      date: new Date().toISOString(),
       heroPost,
       remainingPosts,
     },
@@ -35,9 +38,9 @@ export const metadata = {
   },
 }
 
-const Index: NextPage<Props> = ({ heroPost, remainingPosts }) => {
+const Index: NextPage<Props> = ({ date, heroPost, remainingPosts }) => {
   return (
-    <>
+    <PageLayout date={date}>
       <Head>
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
@@ -68,7 +71,7 @@ const Index: NextPage<Props> = ({ heroPost, remainingPosts }) => {
           )}
         </Container>
       </main>
-    </>
+    </PageLayout>
   )
 }
 

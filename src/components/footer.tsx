@@ -6,8 +6,6 @@ interface Props {
 }
 
 export function Footer({ date }: Props) {
-  const parsedDate = parseISO(date)
-
   return (
     <footer className="bg-neutral-50 border-t border-neutral-200">
       <Container>
@@ -26,7 +24,10 @@ export function Footer({ date }: Props) {
           </div>
         </div>
         <p className="text-sm text-center">
-          Now: <time dateTime={date}>{format(parsedDate, 'PPPPpppp')}</time>
+          Now:{' '}
+          <time dateTime={date} suppressHydrationWarning>
+            {format(parseISO(date), 'PPPPpppp')}
+          </time>
         </p>
       </Container>
     </footer>
