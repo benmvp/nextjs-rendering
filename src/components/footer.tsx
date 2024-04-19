@@ -23,7 +23,7 @@ export function Footer({ date }: Props) {
             </a>
           </div>
         </div>
-        <p className="text-sm text-center">
+        <p className="text-2xl text-center py-8">
           Now:{' '}
           <time dateTime={date} suppressHydrationWarning>
             {format(parseISO(date), 'PPPPpppp')}
