@@ -22,7 +22,7 @@ export function HeroPost({
   excerpt,
   author,
   slug,
-  renderMode = 'app',
+  renderMode = 'ssg',
 }: Props) {
   return (
     <section>

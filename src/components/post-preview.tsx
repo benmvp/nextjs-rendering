@@ -22,7 +22,7 @@ export function PostPreview({
   excerpt,
   author,
   slug,
-  renderMode = 'app',
+  renderMode = 'ssg',
 }: Props) {
   return (
     <div>
