@@ -1,4 +1,5 @@
-import type { NextPage, GetStaticPaths, GetStaticProps } from 'next'
+'use client'
+
 import Head from 'next/head'
 import { CMS_NAME } from '@/lib/constants'
 import markdownToHtml from '@/lib/markdownToHtml'
@@ -8,8 +9,7 @@ import Header from '@/components/header'
 import { PostBody } from '@/components/post-body'
 import { PostHeader } from '@/components/post-header'
 import type { Post } from '@/interfaces/post'
-import PageLayout from '@/components/page-layout'
-import { getPostBySlug, getPostSlugs } from '@/lib/api'
+import { useEffect, useState } from 'react'
 import { RecommendedPosts } from '@/components/recommended-posts-client'
 import OtherRenderModes from '@/components/other-render-modes'
 
@@ -17,66 +17,44 @@ interface DisplayPost extends Post {
   htmlContent: string
 }
 
-interface Props {
-  date: string
-  post: DisplayPost
+interface ContentsProps {
+  slug: string
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const slugs = await getPostSlugs()
+export default function Contents({ slug }: ContentsProps) {
+  const [post, setPost] = useState<DisplayPost | undefined>(undefined)
 
-  return {
-    paths: slugs.map((slug) => {
-      return {
-        params: {
-          slug,
-        },
-      }
-    }),
-    fallback: false,
-  }
-}
+  useEffect(() => {
+    // We have access to cookies, headers, and other user-specific data here
+    // because this function runs at request time on the client
 
-export const getStaticProps: GetStaticProps<
-  Props,
-  { slug: string | undefined }
-> = async ({ params }) => {
-  const post = await getPostBySlug(params?.slug)
+    const fetchPost = async () => {
+      const res = await fetch(`/api/posts/${slug}`)
+      const { post } = (await res.json()) as { post: Post }
+      const htmlContent = await markdownToHtml(post.content || '')
 
-  // We don't have access to cookies, headers, and other user-specific data here
-  // because this function runs at build time
+      console.log('Retrieved post (CSR)', post.slug)
+
+      setPost({ ...post, htmlContent })
+    }
+
+    if (slug) {
+      fetchPost()
+    }
+  }, [slug])
 
   if (!post) {
-    return { notFound: true }
+    // Only this Loading state will be pre-rendered at build time.
+    // The rest of the page will be rendered at request time on the client.
+    return <p className="text-4xl mt-32 text-center">Loading...</p>
   }
-
-  console.log('Retrieved post (ISR)', post.slug)
-
-  const content = await markdownToHtml(post.content || '')
-
-  return {
-    props: {
-      date: new Date().toISOString(),
-      post: {
-        ...post,
-        htmlContent: content,
-      },
-    },
-
-    // revalidate (i.e. refresh) the post every 15 seconds
-    revalidate: 15,
-  }
-}
-
-const PostPage: NextPage<Props> = ({ date, post }) => {
-  const slug = post.slug
 
   return (
-    <PageLayout date={date}>
+    <>
       <Meta post={post} />
 
       <main>
-        <Alert />
+        <Alert preview={post.preview} />
         <Container>
           <Header />
           <article className="mb-32">
@@ -87,16 +65,14 @@ const PostPage: NextPage<Props> = ({ date, post }) => {
               author={post.author}
             />
             <PostBody content={post.htmlContent} />
-            <RecommendedPosts slug={slug} renderMode="isr" />
-            <OtherRenderModes slug={slug} renderMode="isr" />
+            <RecommendedPosts slug={post.slug} renderMode="csr" />
+            <OtherRenderModes slug={post.slug} renderMode="csr" />
           </article>
         </Container>
       </main>
-    </PageLayout>
+    </>
   )
 }
-
-export default PostPage
 
 interface MetaProps {
   post: Post
