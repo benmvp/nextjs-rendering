@@ -22,8 +22,6 @@ interface Params {
 export async function generateStaticParams() {
   const slugs = await getPostSlugs()
 
-  console.log('Retrieved slugs (SSG)', slugs)
-
   return slugs.map((slug) => ({
     slug,
   }))
