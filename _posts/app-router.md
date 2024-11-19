@@ -7,7 +7,7 @@ author:
   name: Joe Haddad
   picture: '/assets/blog/authors/joe.jpeg'
 ogImage:
-  url: '/assets/blog/preview/cover.jpg'
+  url: '/assets/blog/app-router/cover.jpg'
 ---
 
 The landscape of web development continuously evolves, introducing more efficient ways to build and manage dynamic applications. One such innovation that's been making waves is the concept of the "App Router" in modern web frameworks, particularly as seen in the evolution of Next.js and its recent releases. App Router represents a leap forward in client-side navigation, offering developers a powerful set of tools to manage routing, data fetching, and page transitions in a more integrated and efficient manner. In this blog post, we'll delve into the App Router, exploring its significance and how it enhances the web development experience.
